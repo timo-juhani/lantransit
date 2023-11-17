@@ -1,0 +1,4 @@
+# Ignore TF files
+/.terraform
+terraform.tfstate
+terraform.tfstate.backup
