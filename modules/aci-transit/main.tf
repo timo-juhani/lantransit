@@ -48,3 +48,21 @@ module "egp-domain" {
   epg_id = module.epg.epg_id
   physical_domain_id = data.aci_physical_domain.physical-domain.id
 }
+
+module "epg-static-path-access-ports" {
+  source = "./modules/epg-static-path"
+  epg_id = module.epg.epg_id
+  vlan = "vlan-100"
+  mode = "untagged"
+  for_each = toset(var.access_interface_paths)
+  interface_path = each.value
+}
+
+module "epg-static-path-trunk-ports" {
+  source = "./modules/epg-static-path"
+  epg_id = module.epg.epg_id
+  vlan = "vlan-100"
+  mode = "regular"
+  for_each = toset(var.trunk_interface_paths)
+  interface_path = each.value
+}
