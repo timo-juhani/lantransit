@@ -17,6 +17,10 @@ provider "aci" {
   insecure = true
 }
 
+data "aci_physical_domain" "physical-domain" {
+  name  = "TEST"
+}
+
 module "tenant" {
   source = "./modules/tenant"
   tenant_name = "TEST"
@@ -37,4 +41,10 @@ module "epg" {
   application_profile_id = module.tenant.ap_id
   bridge_domain_id = module.bridge-domain.bridge_domain_id
   epg_name = "TEST"
+}
+
+module "egp-domain" {
+  source = "./modules/epg-domain"
+  epg_id = module.epg.epg_id
+  physical_domain_id = data.aci_physical_domain.physical-domain.id
 }
