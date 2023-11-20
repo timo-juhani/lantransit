@@ -24,3 +24,17 @@ module "tenant" {
   vrf_name = "TEST"
   ap_name = "TEST"
 }
+
+module "bridge-domain" {
+  source = "./modules/bridge-domain"
+  tenant_id = module.tenant.tenant_id
+  vrf_id = module.tenant.vrf_id
+  bridge_domain_name = "TEST"
+}
+
+module "epg" {
+  source = "./modules/epg"
+  application_profile_id = module.tenant.ap_id
+  bridge_domain_id = module.bridge-domain.bridge_domain_id
+  epg_name = "TEST"
+}
