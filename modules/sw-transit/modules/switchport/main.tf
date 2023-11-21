@@ -10,11 +10,21 @@ terraform {
   }
 }
 
-resource "iosxe_interface_switchport" "port" {
+resource "iosxe_interface_switchport" "access_port" {
+  # If access port deploy this resource
+  count = var.is_trunk == false ? 1 : 0
   type                    = var.port_type
-  for_each                = toset(var.port_numbers)
-  name                    = each.value
+  name                    = var.port_number
   mode_access             = true
   mode_trunk              = false
   access_vlan             = var.vlan_id
+}
+
+resource "iosxe_interface_switchport" "trunk_port" {
+  # If trunk port deploy this resource
+  count = var.is_trunk == true ? 1 : 0
+  type                    = var.port_type
+  name                    = var.port_number
+  mode_access             = false
+  mode_trunk              = true
 }

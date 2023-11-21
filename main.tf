@@ -90,16 +90,24 @@ module "vlan" {
   vlan_name               = var.vlan_name
 }
 
+# Uplink ports are trunks by default.
+
 module "uplink_ports" {
   source                  = "./modules/sw-transit/modules/switchport"
   vlan_id                 = var.vlan_id
   port_type               = var.ul_port_type
-  port_numbers            = var.ul_port_numbers 
+  for_each                = toset(var.ul_port_numbers)
+  port_number             = each.value
+  is_trunk                = true
 }
+
+# Downlink ports are access ports by default. 
 
 module "downlink_ports" {
   source                  = "./modules/sw-transit/modules/switchport"
   vlan_id                 = var.vlan_id
   port_type               = var.dl_port_type
-  port_numbers            = var.dl_port_numbers 
+  for_each                = toset(var.dl_port_numbers)
+  port_number             = each.value
+  is_trunk                = false
 }

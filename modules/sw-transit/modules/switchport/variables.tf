@@ -11,8 +11,12 @@ variable "port_type" {
   description = "The type of ports e.g. GigabitEthernet"
 }
 
-variable "port_numbers" {
-  type        = list(string)
-  description = "The port numbers e.g. 1/1/1 (list)"
+variable "port_number" {
+  type        = string
+  description = "The port numbers e.g. 1/1/1"
 }
 
+variable "is_trunk" {
+  type        = bool
+  description = "Is trunk boolean"
+}
