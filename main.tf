@@ -84,26 +84,22 @@ provider "iosxe" {
   url                     = var.sw_url
 }
 
-resource "iosxe_vlan" "vlan" {
+module "vlan" {
+  source                  = "./modules/sw-transit/modules/vlan"
   vlan_id                 = var.vlan_id
-  name                    = var.vlan_name
-  shutdown                = false
+  vlan_name               = var.vlan_name
 }
 
-resource "iosxe_interface_switchport" "uplink_ports" {
-  type                    = var.ul_port_type
-  for_each                = toset(var.ul_port_numbers)
-  name                    = each.value
-  mode_access             = true
-  mode_trunk              = false
-  access_vlan             = var.vlan_id
+module "uplink_ports" {
+  source                  = "./modules/sw-transit/modules/switchport"
+  vlan_id                 = var.vlan_id
+  port_type               = var.ul_port_type
+  port_numbers            = var.ul_port_numbers 
 }
 
-resource "iosxe_interface_switchport" "downlink_ports" {
-  type                    = var.dl_port_type
-  for_each                = toset(var.dl_port_numbers)
-  name                    = each.value
-  mode_access             = true
-  mode_trunk              = false
-  access_vlan             = var.vlan_id
+module "downlink_ports" {
+  source                  = "./modules/sw-transit/modules/switchport"
+  vlan_id                 = var.vlan_id
+  port_type               = var.dl_port_type
+  port_numbers            = var.dl_port_numbers 
 }
