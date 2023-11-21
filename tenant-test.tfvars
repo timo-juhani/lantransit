@@ -10,7 +10,7 @@ vrf_name                    = "TEST"
 ap_name                     = "TEST"
 bridge_domain_name          = "TEST"
 epg_name                    = "TEST"
-# Sntax example for vlan: vlan-100
+# Syntax example for vlan: vlan-100
 vlan                        = "vlan-100"
 
 # Example topology paths:
@@ -20,7 +20,8 @@ vlan                        = "vlan-100"
 # Access port list
 access_interface_paths      = [
                                 "topology/pod-1/paths-101/pathep-[eth1/2]", 
-                                "topology/pod-1/paths-101/pathep-[eth1/3]"
+                                "topology/pod-1/paths-101/pathep-[eth1/3]",
+                                "topology/pod-1/paths-101/pathep-[eth1/4]"
                             ]
 # VPC trunk ports
 trunk_interface_paths       = [
@@ -28,3 +29,14 @@ trunk_interface_paths       = [
                             ]
 
 # LAN Switching
+vlan_id                         = 100
+vlan_name                       = "TEST"
+ul_port_type                    = "GigabitEthernet"
+ul_port_numbers                 = [
+                                    "1/1/4"
+                                ]
+dl_port_type                    = "GigabitEthernet"
+dl_port_numbers                 = [
+                                    "1/1/1",
+                                    "1/1/2"
+                                ]

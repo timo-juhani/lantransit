@@ -9,20 +9,25 @@ terraform {
       source = "CiscoDevNet/aci"
       version = "2.11.1"
     }
+
+    iosxe = {
+      source = "CiscoDevNet/iosxe"
+      version = "0.5.1"
+    }
   }
 }
 
 # PHASE 1: ACI TRANSIT
 
 provider "aci" {
-  url      = var.aci_url
-  username = var.aci_username
-  password = var.aci_password
-  insecure = true
+  url                     = var.aci_url
+  username                = var.aci_username
+  password                = var.aci_password
+  insecure                = true
 }
 
 data "aci_physical_domain" "physical-domain" {
-  name  = var.physical_domain_name
+  name                    = var.physical_domain_name
 }
 
 module "tenant" {
@@ -72,3 +77,33 @@ module "epg-static-path-trunk-ports" {
 }
 
 # PHASE 2: LAN SW TRANSIT
+
+provider "iosxe" {
+  username                = var.sw_username
+  password                = var.sw_password
+  url                     = var.sw_url
+}
+
+resource "iosxe_vlan" "vlan" {
+  vlan_id                 = var.vlan_id
+  name                    = var.vlan_name
+  shutdown                = false
+}
+
+resource "iosxe_interface_switchport" "uplink_ports" {
+  type                    = var.ul_port_type
+  for_each                = toset(var.ul_port_numbers)
+  name                    = each.value
+  mode_access             = true
+  mode_trunk              = false
+  access_vlan             = var.vlan_id
+}
+
+resource "iosxe_interface_switchport" "downlink_ports" {
+  type                    = var.dl_port_type
+  for_each                = toset(var.dl_port_numbers)
+  name                    = each.value
+  mode_access             = true
+  mode_trunk              = false
+  access_vlan             = var.vlan_id
+}
